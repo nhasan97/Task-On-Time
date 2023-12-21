@@ -69,9 +69,11 @@ const Navbar = () => {
                     <img src={user.photoURL} />
                   </div>
                 </label>
-                <p className="border-l-2 p-2 text-lg">{user.displayName}</p>
+                <p className="hidden md:flex border-l-2 p-2 text-lg">
+                  {user.displayName}
+                </p>
                 <button
-                  className="btn btn-circle border-none bg-[#95D0D4] text-white hover:text-[#323484]"
+                  className="btn btn-circle border-none bg-[#B398F6] text-white hover:text-[#B398F6]"
                   onClick={handleLogout}
                 >
                   <AiOutlineLogout className="text-2xl"></AiOutlineLogout>
@@ -80,13 +82,13 @@ const Navbar = () => {
             ) : (
               <div className="flex justify-center items-center gap-2">
                 <Link
-                  className="btn border-none bg-[#FE7E51] text-white hover:text-[#323484]"
+                  className="btn border-none bg-[#F89E1E] text-white hover:text-[#F89E1E]"
                   to="/login"
                 >
                   <AiOutlineLogin className="text-2xl"></AiOutlineLogin>
                 </Link>
                 <Link
-                  className="btn border-none bg-[#FE7E51] text-white hover:text-[#323484]"
+                  className="btn border-none bg-[#F89E1E] text-white hover:text-[#F89E1E]"
                   to="/register"
                 >
                   Register

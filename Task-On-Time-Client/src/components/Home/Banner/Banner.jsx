@@ -17,7 +17,7 @@ const Banner = () => {
           />
           <div className="z-10">
             <div className="flex flex-col items-center gap-6 pt-10">
-              <h1 className="text-center text-[#101322] text-xl md:text-[30px] lg:text-[40px] font-bold md:leading-[60px]">
+              <h1 className="text-center text-[#101322] text-xl md:text-[30px] lg:text-[40px] font-bold md:leading-[50px] lg:leading-[60px]">
                 Let's make your tasks <br></br>easy, simple and organized.
               </h1>
 
