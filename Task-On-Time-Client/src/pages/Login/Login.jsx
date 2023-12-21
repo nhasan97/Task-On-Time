@@ -1,14 +1,52 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { BiLogoGoogle } from "react-icons/bi";
+import {
+  showAlertOnError,
+  showAlertOnSuccess,
+} from "../../utilities/displaySweetAlert";
+import { GoogleAuthProvider } from "firebase/auth";
+import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const [showPass, setShowPass] = useState(false);
+  const { loginWithEmailAndPassword, signInWithGoogle } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   //==================== Login Using Email and Password ====================
-  const onSubmit = (data) => {};
+  const onSubmit = (data) => {
+    loginWithEmailAndPassword(data.email, data.pass)
+      .then((result) => {
+        showAlertOnSuccess("Login successful");
+        console.log(result.user);
+        navigate(from, { replace: true });
+      })
+      .catch((err) => {
+        showAlertOnError(err.code + "---------" + err.message);
+      });
+  };
+
+  //================== Login using Google ==================
+  const handleLoginWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+
+    signInWithGoogle(provider)
+      .then(async (result) => {
+        if (result?.user?.email) {
+          // const dbResponse = await saveUserData(result?.user);
+          // console.log(dbResponse);
+          navigate(from, { replace: true });
+        }
+      })
+      .catch((err) => {
+        showAlertOnError(err.code + "---" + err.message);
+      });
+  };
 
   return (
     <div className="w-full h-screen flex justify-center items-center bg-[url('src/assets/others/authentication.png')]">
@@ -76,7 +114,10 @@ const Login = () => {
               </Link>
             </p>
             <p className="text-lg font-medium">Or sign in with</p>
-            <BiLogoGoogle className="btn w-1/2 mx-auto bg-[#FE7E51] text-lg font-medium text-white hover:text-[#FE7E51] normal-case rounded-lg"></BiLogoGoogle>
+            <BiLogoGoogle
+              className="btn w-1/2 mx-auto bg-[#FE7E51] text-lg font-medium text-white hover:text-[#FE7E51] normal-case rounded-lg"
+              onClick={handleLoginWithGoogle}
+            ></BiLogoGoogle>
           </div>
         </div>
       </div>

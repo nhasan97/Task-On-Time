@@ -1,18 +1,70 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiLogoGoogle } from "react-icons/bi";
+import { uploadImage } from "../../utilities/imageUploader";
+import {
+  showAlertOnSuccess,
+  showAlertOnError,
+} from "../../utilities/displaySweetAlert";
+import { GoogleAuthProvider } from "firebase/auth";
+import useAuth from "../../hooks/useAuth";
 
 const Register = () => {
   const {
     register,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm();
   const [showPass, setShowPass] = useState(false);
+  const { registerWithEmailAndPassword, updateUsersProfile, signInWithGoogle } =
+    useAuth();
+  const navigate = useNavigate();
 
   //==================== Register Using Email and Password ====================
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    try {
+      const imageData = await uploadImage(data.photo[0]);
+
+      registerWithEmailAndPassword(data.email, data.pass)
+        .then(async (result) => {
+          updateUsersProfile(data.name, imageData?.data?.display_url)
+            .then(async () => {
+              // const dbResponse = await saveUserData(result?.user);
+              // console.log(dbResponse);
+              reset();
+              showAlertOnSuccess("Account created successfully");
+              navigate("/");
+            })
+            .catch((err) => {
+              showAlertOnError(err.code + "---------" + err.message);
+            });
+        })
+        .catch((err) => {
+          showAlertOnError(err.code + "---------" + err.message);
+        });
+    } catch (err) {
+      showAlertOnError(err.message);
+    }
+  };
+
+  //================== Register using Google ==================
+  const handleRegistrationWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+
+    signInWithGoogle(provider)
+      .then(async (result) => {
+        if (result?.user?.email) {
+          // const dbResponse = await saveUserData(result?.user);
+          // console.log(dbResponse);
+          navigate(location?.state ? location.state : "/");
+        }
+      })
+      .catch((err) => {
+        showAlertOnError(err.code + "---" + err.message);
+      });
+  };
 
   return (
     <div className="w-full h-screen flex justify-center items-center bg-[url('src/assets/others/authentication.png')]">
@@ -134,7 +186,10 @@ const Register = () => {
             </p>
             <p className="text-lg font-medium">Or sign in with</p>
 
-            <BiLogoGoogle className="btn w-1/2 mx-auto bg-[#FE7E51] text-lg font-medium text-white hover:text-[#FE7E51] normal-case rounded-lg"></BiLogoGoogle>
+            <BiLogoGoogle
+              className="btn w-1/2 mx-auto bg-[#FE7E51] text-lg font-medium text-white hover:text-[#FE7E51] normal-case rounded-lg"
+              onClick={handleRegistrationWithGoogle}
+            ></BiLogoGoogle>
           </div>
         </div>
       </div>
