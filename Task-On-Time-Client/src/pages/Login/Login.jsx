@@ -8,6 +8,7 @@ import {
 } from "../../utilities/displaySweetAlert";
 import { GoogleAuthProvider } from "firebase/auth";
 import useAuth from "../../hooks/useAuth";
+import { saveUserData } from "../../api/authAPIs";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -38,8 +39,8 @@ const Login = () => {
     signInWithGoogle(provider)
       .then(async (result) => {
         if (result?.user?.email) {
-          // const dbResponse = await saveUserData(result?.user);
-          // console.log(dbResponse);
+          const dbResponse = await saveUserData(result?.user);
+          console.log(dbResponse);
           navigate(from, { replace: true });
         }
       })

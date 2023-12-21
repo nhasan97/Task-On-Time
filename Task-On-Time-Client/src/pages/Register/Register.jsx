@@ -9,6 +9,7 @@ import {
 } from "../../utilities/displaySweetAlert";
 import { GoogleAuthProvider } from "firebase/auth";
 import useAuth from "../../hooks/useAuth";
+import { saveUserData } from "../../api/authAPIs";
 
 const Register = () => {
   const {
@@ -31,8 +32,8 @@ const Register = () => {
         .then(async (result) => {
           updateUsersProfile(data.name, imageData?.data?.display_url)
             .then(async () => {
-              // const dbResponse = await saveUserData(result?.user);
-              // console.log(dbResponse);
+              const dbResponse = await saveUserData(result?.user);
+              console.log(dbResponse);
               reset();
               showAlertOnSuccess("Account created successfully");
               navigate("/");
@@ -56,8 +57,8 @@ const Register = () => {
     signInWithGoogle(provider)
       .then(async (result) => {
         if (result?.user?.email) {
-          // const dbResponse = await saveUserData(result?.user);
-          // console.log(dbResponse);
+          const dbResponse = await saveUserData(result?.user);
+          console.log(dbResponse);
           navigate(location?.state ? location.state : "/");
         }
       })
