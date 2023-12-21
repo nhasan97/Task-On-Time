@@ -12,12 +12,9 @@ const Navbar = () => {
   const links = (
     <div className="text-[#757575] text-base font-medium space-x-8">
       <NavLink to="/">Home</NavLink>
-      <NavLink to="/surveys">Surveys</NavLink>
-      <NavLink to="/pro">Pro</NavLink>
+      {user && <NavLink to="/dashboard">Dashboard</NavLink>}
       <NavLink to="/about">About Us</NavLink>
       <NavLink to="/contact">Contact</NavLink>
-
-      {user && <NavLink to="/dashboard">Dashboard</NavLink>}
     </div>
   );
 
@@ -32,7 +29,7 @@ const Navbar = () => {
   return (
     <div className="w-full h-fit py-2 bg-[rgba(255,255,255,.5)] absolute z-10">
       <Container>
-        <div className="navbar  text-[#101322]">
+        <div className="navbar p-0 text-[#101322]">
           <div className="navbar-start">
             <div className="dropdown">
               <label tabIndex={0} className="btn btn-ghost lg:hidden">

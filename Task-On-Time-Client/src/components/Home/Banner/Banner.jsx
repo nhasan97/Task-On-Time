@@ -1,34 +1,53 @@
 import { Link } from "react-router-dom";
-
-// import pic2 from "../../assets/Charts.gif";bg-[url(../public/bar-chart.png)] bg-no-repeat bg-center bg-auto
+import pic from "../../../../public/banner-bg.png";
+import gear from "../../../assets/gear.png";
+import gear2 from "../../../assets/gear2.png";
+import "./Banner.css";
+import Container from "../../shared/Container";
 
 const Banner = () => {
   return (
-    <div>
-      <div className="h-screen  flex flex-col justify-center items-center">
-        <div
-          className="flex flex-col items-center gap-6"
-          //   data-aos="zoom-in"
-          //   data-aos-delay="50"
-          //   data-aos-duration="1000"
-          //   data-aos-easing="ease-in-out"
-          //   data-aos-mirror="true"
-        >
-          <h1 className="text-center text-[#101322] text-[40px] font-bold leading-[60px]">
-            Insights that Empower, Surveys that Deliver. <br />
-            Survey with Us Today!
-          </h1>
+    <div className="h-fit bg-[#E1D3FA] py-28">
+      <Container>
+        <div className="relative">
+          <img
+            src={gear}
+            alt=""
+            className="gear absolute left-0 top-0 w-[20%] z-0"
+          />
+          <div className="z-10">
+            <div className="flex flex-col items-center gap-6 pt-10">
+              <h1 className="text-center text-[#101322] text-xl md:text-[30px] lg:text-[40px] font-bold md:leading-[60px]">
+                Let's make your tasks <br></br>easy, simple and organized.
+              </h1>
 
-          <Link
-            to="/surveys"
-            className="btn bg-[#FE7E51] hover:bg-white text-lg text-white hover:text-[#FE7E51] border-none"
-          >
-            Explore <i className="fa-solid fa-arrow-right"></i>
-          </Link>
+              <Link
+                to="/login"
+                className="btn bg-[#F89E1E] hover:bg-white text-lg text-white hover:text-[#F89E1E] border-none"
+              >
+                Let’s Explore <i className="fa-solid fa-arrow-right"></i>
+              </Link>
+            </div>
+          </div>
+          <div className="z-10">
+            <img
+              src={pic}
+              alt=""
+              className="mx-auto mt-10"
+              data-aos="zoom-in"
+              data-aos-delay="50"
+              data-aos-duration="1000"
+              data-aos-easing="ease-in-out"
+              data-aos-mirror="true"
+            />
+          </div>
+          <img
+            src={gear2}
+            alt=""
+            className="gear absolute right-0 bottom-0 w-[30%] z-0"
+          />
         </div>
-
-        {/* <img src={pic2} alt="" /> */}
-      </div>
+      </Container>
     </div>
   );
 };

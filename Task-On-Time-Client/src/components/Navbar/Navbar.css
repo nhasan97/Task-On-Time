@@ -3,14 +3,14 @@
 }
 
 .navbar-center a:hover {
-    background: #70357b85;
+    background: #D95977;
     border-radius: 6px;
     color: white;
     transition: .2s ease-in-out;
 }
 
 .navbar-center a.active {
-    background: #71357B;
+    background: #D95977;
     border-radius: 6px;
     color: white;
 }

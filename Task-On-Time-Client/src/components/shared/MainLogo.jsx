@@ -1,4 +1,4 @@
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo2.png";
 import PropTypes from "prop-types";
 
 const MainLogo = ({ caller }) => {
@@ -9,7 +9,7 @@ const MainLogo = ({ caller }) => {
         caller === "d" ? "justify-center" : "justify-start"
       } items-center text-2xl`}
     >
-      <img src={logo} alt="" className="w-2/3 mr-2" />
+      <img src={logo} alt="" className="w-[60%] mr-2" />
     </a>
   );
 };
