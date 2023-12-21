@@ -35,9 +35,9 @@ async function run() {
 
     //============================== gets ==============================
 
-    // app.get("/bookings", async (req, res) => {
+    // app.get("/users", async (req, res) => {
     //   try {
-    //     const ordersCollection = database.collection("orders");
+    //     const ordersCollection = database.collection("users");
     //     const cursor = ordersCollection.find();
     //     const result = await cursor.toArray();
     //     res.send(result);
@@ -48,16 +48,29 @@ async function run() {
 
     //============================== posts ==============================
 
-    // app.post("/orders", async (req, res) => {
-    //   try {
-    //     const ordersCollection = database.collection("orders");
-    //     const order = req.body;
-    //     const result = await ordersCollection.insertOne(order);
-    //     res.send(result);
-    //   } catch (error) {
-    //     res.send({ error: true, message: error.message });
-    //   }
-    // });
+    app.put("/users/:email", async (req, res) => {
+      try {
+        const usersCollection = database.collection("users");
+        const email = req.params.email;
+        const user = req.body;
+        const query = { email: email };
+        const option = { upsert: true };
+        const doesExist = await usersCollection.findOne(query);
+        if (doesExist) {
+          return res.send(doesExist);
+        }
+        const result = await usersCollection.updateOne(
+          query,
+          {
+            $set: { ...user, timeStamp: Date.now() },
+          },
+          option
+        );
+        return res.send(result);
+      } catch (error) {
+        res.send({ error: true, message: error.message });
+      }
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
