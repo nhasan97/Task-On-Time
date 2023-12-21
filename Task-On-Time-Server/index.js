@@ -1,15 +1,40 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const { MongoClient, ServerApiVersion } = require("mongodb");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const port = 5000 || process.env.PORT;
 
 //middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://task-on-time-c2443.web.app",
+      "https://task-on-time-c2443.firebaseapp.com",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
+
+const verifyToken = (req, res, next) => {
+  const token = req?.cookies?.token;
+  if (!token) {
+    return res.status(401).send({ message: "Unauthorized Access" });
+  }
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized Access" });
+    }
+    req.user = decoded;
+    next();
+  });
+};
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ygecibd.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -47,8 +72,29 @@ async function run() {
     // });
 
     //============================== posts ==============================
+    app.post("/jwt", async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "1h",
+      });
+      res
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        })
+        .send({ success: true });
+    });
 
-    app.put("/users/:email", async (req, res) => {
+    app.post("/logout", async (req, res) => {
+      const user = req.body;
+      res.clearCookie("token", { maxAge: 0 }).send({ success: true });
+    });
+
+    //-----------------------------------------------
+
+    //============================== puts ==============================
+    app.put("/users/:email", verifyToken, async (req, res) => {
       try {
         const usersCollection = database.collection("users");
         const email = req.params.email;
