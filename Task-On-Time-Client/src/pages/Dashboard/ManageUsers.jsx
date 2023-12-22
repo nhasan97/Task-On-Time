@@ -1,9 +1,8 @@
 import { Helmet } from "react-helmet-async";
 import DashboardContainer from "../../components/dashboard/shared/DashboardContainer";
 
-import usePerformMutation from "../../hooks/usePerformMutation";
 import { useQuery } from "@tanstack/react-query";
-import { getUsersData, updateUserRole } from "../../api/usersAPIs";
+import { getUsersData } from "../../api/usersAPIs";
 import timeStampToDateConverter from "../../utilities/timeStampToDateConverter";
 import NoData from "../../components/shared/NoData";
 import Loading from "../../components/shared/Loading";
@@ -27,30 +26,6 @@ const ManageUsers = () => {
     queryKey: ["getUsersData"],
     queryFn: getUsersData,
   });
-
-  //performing mutation for updating user role
-  const mutation = usePerformMutation(
-    "updateRole",
-    updateUserRole,
-    "Updated successfully!"
-  );
-
-  //update button handler
-  const handleUserRole = (e) => {
-    e.preventDefault();
-
-    const form = e.target;
-    const email = form.email.value || "Not Found";
-    const role = form.role.value || "Not Found";
-
-    const updatedRole = {
-      role,
-    };
-
-    mutation.mutate({ email, updatedRole });
-    refetch();
-    form.reset();
-  };
 
   if (loadingUsers) {
     return <Loading />;
@@ -102,10 +77,7 @@ const ManageUsers = () => {
                           </button>
                         </form>
                         <div className="p-5">
-                          <form
-                            className="w-full flex flex-col gap-4 text-left"
-                            onSubmit={handleUserRole}
-                          >
+                          <form className="w-full flex flex-col gap-4 text-left">
                             <input
                               type="text"
                               name="email"
