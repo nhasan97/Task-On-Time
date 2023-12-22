@@ -4,7 +4,7 @@ import "./Title.css";
 const Title = ({ title }) => {
   const { mainTitle, subTitle } = title;
   return (
-    <div className="flex flex-col justify-center items-start md:items-center gap-2 my-3">
+    <div className="flex flex-col justify-center items-center gap-2 my-3">
       <h1 className="title-grad text-[#101322] text-xl md:text-2xl lg:text-4xl font-bold">
         {mainTitle}
       </h1>
