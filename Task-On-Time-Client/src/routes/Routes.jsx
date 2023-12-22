@@ -11,6 +11,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import AdminRoute from "./AdminRoute";
 import ManageUsers from "../pages/Dashboard/ManageUsers";
 import CreateTask from "../pages/Dashboard/CreateTask";
+import DisplayTasks from "../pages/Dashboard/DisplayTasks";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,16 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        path: "manage-tasks",
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <DisplayTasks></DisplayTasks>
+            </AdminRoute>
+          </PrivateRoute>
+        ),
+      },
       {
         path: "create-task",
         element: (

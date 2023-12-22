@@ -29,19 +29,19 @@ const CreateTask = () => {
 
   //setting the title
   const title = {
-    mainTitle: "Create Survey",
+    mainTitle: "Create Tasks",
     subTitle: "",
   };
 
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationKey: ["createSurvey"],
+    mutationKey: ["createTasks"],
     mutationFn: saveTaskData,
     onSuccess: () => {
       showAlertOnSuccess("Inserted successfully!");
       reset();
-      queryClient.invalidateQueries("createSurvey");
+      queryClient.invalidateQueries("createTasks");
       navigate(location?.state ? location.state : "/dashboard");
     },
     onError: (error) => {
@@ -69,8 +69,8 @@ const CreateTask = () => {
       } else return;
     }
   };
-  // mutation.isLoading||
-  if (loading) {
+
+  if (mutation.isLoading || loading) {
     return <Loading />;
   }
 
