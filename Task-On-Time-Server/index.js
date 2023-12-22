@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -60,16 +60,30 @@ async function run() {
 
     //============================== gets ==============================
 
-    // app.get("/users", async (req, res) => {
-    //   try {
-    //     const ordersCollection = database.collection("users");
-    //     const cursor = ordersCollection.find();
-    //     const result = await cursor.toArray();
-    //     res.send(result);
-    //   } catch (error) {
-    //     res.send({ error: true, message: error.message });
-    //   }
-    // });
+    app.get("/users", verifyToken, async (req, res) => {
+      try {
+        if (req.user.email !== req.query.email) {
+          return res.status(403).send({ message: "Forbidden Access" });
+        }
+        const usersCollection = database.collection("users");
+        let query = {};
+        if (req.query?.email) {
+          query = { email: req.query.email };
+        }
+        const cursor = usersCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (error) {
+        res.send({ error: true, message: error.message });
+      }
+    });
+
+    app.get("/tasks", async (req, res) => {
+      const taskCollection = database.collection("tasks");
+      const cursor = taskCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     //============================== posts ==============================
     app.post("/jwt", async (req, res) => {
@@ -93,6 +107,17 @@ async function run() {
 
     //-----------------------------------------------
 
+    app.post("/tasks", async (req, res) => {
+      try {
+        const taskCollection = database.collection("tasks");
+        const task = { ...req.body, timeStamp: Date.now() };
+        const result = await taskCollection.insertOne(task);
+        res.send(result);
+      } catch (error) {
+        res.send({ error: true, message: error.message });
+      }
+    });
+
     //============================== puts ==============================
     app.put("/users/:email", verifyToken, async (req, res) => {
       try {
@@ -115,6 +140,32 @@ async function run() {
         return res.send(result);
       } catch (error) {
         res.send({ error: true, message: error.message });
+      }
+    });
+
+    app.patch("/tasks/:_id", verifyToken, async (req, res) => {
+      try {
+        const taskCollection = database.collection("tasks");
+        const taskId = req.params._id;
+        const filter = { _id: new ObjectId(taskId) };
+        const options = { upsert: true };
+        const updatedInfo = {
+          $set: {
+            title: req.body.title,
+            description: req.body.description,
+            deadline: req.body.deadline,
+            priority: req.body.priority,
+          },
+        };
+
+        const result = await taskCollection.updateOne(
+          filter,
+          updatedInfo,
+          options
+        );
+        return res.send(result);
+      } catch (error) {
+        return res.send({ error: true, message: error.message });
       }
     });
 
