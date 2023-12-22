@@ -4,8 +4,11 @@ import Title from "../../components/shared/Title/Title";
 import aboutImg from "../../assets/about.png";
 import gear from "../../assets/gear.png";
 import { Link } from "react-router-dom";
+import useUserRole from "../../hooks/useUserRole";
 
 const About = () => {
+  const [role] = useUserRole();
+
   const title = {
     mainTitle: "About",
     subTitle: "",
@@ -35,12 +38,23 @@ const About = () => {
             burden.
           </p>
 
-          <Link
-            to="/login"
-            className="btn bg-[#F89E1E] hover:bg-white text-lg text-white hover:text-[#F89E1E] mt-6 border-none"
-          >
-            Let’s Explore <i className="fa-solid fa-arrow-right"></i>
-          </Link>
+          {role === "admin" && (
+            <Link
+              to="/dashboard/manage-users"
+              className="btn bg-[#F89E1E] hover:bg-white text-lg text-white hover:text-[#F89E1E] border-none"
+            >
+              Let’s Explore <i className="fa-solid fa-arrow-right"></i>
+            </Link>
+          )}
+
+          {role === "member" && (
+            <Link
+              to="/dashboard"
+              className="btn bg-[#F89E1E] hover:bg-white text-lg text-white hover:text-[#F89E1E] border-none"
+            >
+              Let’s Explore <i className="fa-solid fa-arrow-right"></i>
+            </Link>
+          )}
         </div>
       </div>
     </Container>

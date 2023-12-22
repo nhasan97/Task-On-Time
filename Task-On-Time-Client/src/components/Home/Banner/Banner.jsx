@@ -4,8 +4,11 @@ import gear from "../../../assets/gear.png";
 import gear2 from "../../../assets/gear2.png";
 import "./Banner.css";
 import Container from "../../shared/Container";
+import useUserRole from "../../../hooks/useUserRole";
 
 const Banner = () => {
+  const [role] = useUserRole();
+
   return (
     <div className="h-fit bg-[#E1D3FA] py-28">
       <Container>
@@ -23,7 +26,7 @@ const Banner = () => {
               </h1>
 
               <Link
-                to="/login"
+                to={role === "admin" ? "/dashboard/manage-users" : "/dashboard"}
                 className="btn bg-[#F89E1E] hover:bg-white text-lg text-white hover:text-[#F89E1E] border-none"
               >
                 Let’s Explore <i className="fa-solid fa-arrow-right"></i>

@@ -6,6 +6,10 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import ContactUs from "../pages/ContactUs";
 import About from "../pages/Home/About";
+import PrivateRoute from "./PrivateRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
+import AdminRoute from "./AdminRoute";
+import ManageUsers from "../pages/Dashboard/ManageUsers";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +28,26 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <About></About>,
+      },
+    ],
+  },
+  {
+    path: "dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: "manage-users",
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <ManageUsers></ManageUsers>
+            </AdminRoute>
+          </PrivateRoute>
+        ),
       },
     ],
   },
