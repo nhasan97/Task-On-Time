@@ -17,8 +17,9 @@ const Banner = () => {
           />
           <div className="z-10">
             <div className="flex flex-col items-center gap-6 pt-10">
-              <h1 className="text-center text-[#101322] text-xl md:text-[30px] lg:text-[40px] font-bold md:leading-[50px] lg:leading-[60px]">
-                Let's make your tasks <br></br>easy, simple and organized.
+              <h1 className="text-center text-[#262626] text-xl md:text-4xl lg:text-5xl font-bold md:leading-[50px] lg:leading-[60px]">
+                Let's make your tasks <br></br>easy, simple and<br></br>{" "}
+                organized.
               </h1>
 
               <Link
@@ -44,7 +45,7 @@ const Banner = () => {
           <img
             src={gear2}
             alt=""
-            className="gear absolute right-0 bottom-0 w-[30%] z-0"
+            className="gear absolute right-0 md:right-8 lg:right-0 bottom-0 w-[30%] z-0"
           />
         </div>
       </Container>

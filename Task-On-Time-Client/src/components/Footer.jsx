@@ -6,7 +6,7 @@ const Footer = () => {
   const year = moment().format("YYYY");
 
   return (
-    <div className="w-full h-fit bg-[#101322] p-4">
+    <div className="w-full h-fit bg-[#B398F6] p-4">
       <Container>
         <footer className="flex justify-between items-center text-neutral-content">
           <div className="w-[20%]">

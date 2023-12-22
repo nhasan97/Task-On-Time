@@ -1,0 +1,7 @@
+.title-grad {
+
+    background: linear-gradient(to right, #b398f6, #c589e2, #d27bcb, #da6eb3, #dd6399, #e66089, #eb6078, #ed6267, #f76d58, #fc7b48, #fd8c35, #f89e1e);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
