@@ -13,7 +13,7 @@ const Navbar = () => {
     <div className="text-[#757575] text-base font-medium space-x-8">
       <NavLink to="/">Home</NavLink>
       {user && <NavLink to="/dashboard">Dashboard</NavLink>}
-      <NavLink to="/about">About Us</NavLink>
+      <NavLink to="/about">About</NavLink>
       <NavLink to="/contact">Contact</NavLink>
     </div>
   );
@@ -31,7 +31,7 @@ const Navbar = () => {
       <Container>
         <div className="navbar p-0 text-[#101322]">
           <div className="navbar-start">
-            <div className="dropdown">
+            <div className="hidden dropdown">
               <label tabIndex={0} className="btn btn-ghost lg:hidden">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

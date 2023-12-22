@@ -11,7 +11,7 @@ const Footer = () => {
         <footer className="footer footer-center p-10 text-white">
           <aside>
             <img src={MainLogo} alt="" className="w-2/3 md:w-1/2" />
-            <p className="font-bold">Your reliable task manager</p>
+            <p className="font-medium">Your reliable task manager</p>
             <p>Copyright © {year} - All right reserved</p>
           </aside>
           <nav>
