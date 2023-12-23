@@ -23,3 +23,8 @@ export const updateTaskData = async (obj) => {
   );
   return response.data;
 };
+
+export const deleteTaskData = async (_id) => {
+  const response = await axiosSecure.delete(`/tasks/${_id._id}`);
+  return response.data;
+};

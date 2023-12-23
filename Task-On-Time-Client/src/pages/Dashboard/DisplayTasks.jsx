@@ -7,7 +7,11 @@ import useCurrentDate from "../../hooks/useCurrentDate";
 import dateComparer from "../../utilities/dateComparer";
 import usePerformMutation from "../../hooks/usePerformMutation";
 import NoData from "../../components/shared/NoData";
-import { getTaskData, updateTaskData } from "../../api/taskAPIs";
+import {
+  deleteTaskData,
+  getTaskData,
+  updateTaskData,
+} from "../../api/taskAPIs";
 import Title from "../../components/shared/Title/Title";
 import { showToastOnError } from "../../utilities/displayToast";
 import useGetMembers from "../../hooks/useGetMembers";
@@ -77,18 +81,18 @@ const DisplayTasks = () => {
     }
   };
 
-  //performing mutation for deleting survey data
-  // const mutation2 = usePerformMutation(
-  //   "deleteSurvey",
-  //   deleteSurveyData,
-  //   "Deleted successfully!"
-  // );
+  // performing mutation for deleting task data
+  const mutation2 = usePerformMutation(
+    "deleteTask",
+    deleteTaskData,
+    "Deleted successfully!"
+  );
 
-  //delete button handler
-  // const handleDelete = (_id) => {
-  //   mutation2.mutate({ _id });
-  //   refetch();
-  // };
+  // delete button handler
+  const handleDelete = (_id) => {
+    mutation2.mutate({ _id });
+    refetch();
+  };
 
   if (isLoading || loadingMembers) {
     return <Loading />;
@@ -291,7 +295,7 @@ const DisplayTasks = () => {
 
                     <button
                       className="btn hover:bg-red-500 group"
-                      // onClick={() => handleDelete(task._id)}
+                      onClick={() => handleDelete(task._id)}
                     >
                       <i className="fa-solid fa-trash group-hover:text-white "></i>
                     </button>
