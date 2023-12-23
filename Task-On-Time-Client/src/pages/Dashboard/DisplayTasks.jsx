@@ -1,12 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-// import {
-//   deleteSurveyData,
-//   getUserBasedSurveyData,
-//   updateSurveyData,
-// } from "../../api/surveyAPIs";
 import { Helmet } from "react-helmet-async";
 import timeStampToDateConverter from "../../utilities/timeStampToDateConverter";
-import useAuth from "../../hooks/useAuth";
 import DashboardContainer from "../../components/dashboard/shared/DashboardContainer";
 import Loading from "../../components/shared/Loading";
 import useCurrentDate from "../../hooks/useCurrentDate";
@@ -16,6 +10,7 @@ import usePerformMutation from "../../hooks/usePerformMutation";
 import NoData from "../../components/shared/NoData";
 import { getTaskData, updateTaskData } from "../../api/taskAPIs";
 import Title from "../../components/shared/Title/Title";
+import { showToastOnError } from "../../utilities/displayToast";
 
 const DisplayTasks = () => {
   const today = useCurrentDate();
@@ -60,7 +55,7 @@ const DisplayTasks = () => {
     const dateValidity = dateComparer(today, deadline);
 
     if (defaultDeadline !== deadline && dateValidity === "invalid") {
-      showAlertOnError("Please enter a valid date!");
+      showToastOnError("Please enter a valid date!");
     } else {
       const updatedTask = {
         title,
