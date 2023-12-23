@@ -5,17 +5,22 @@ import DashboardContainer from "../../components/dashboard/shared/DashboardConta
 import Loading from "../../components/shared/Loading";
 import useCurrentDate from "../../hooks/useCurrentDate";
 import dateComparer from "../../utilities/dateComparer";
-import { showAlertOnError } from "../../utilities/displaySweetAlert";
 import usePerformMutation from "../../hooks/usePerformMutation";
 import NoData from "../../components/shared/NoData";
 import { getTaskData, updateTaskData } from "../../api/taskAPIs";
 import Title from "../../components/shared/Title/Title";
 import { showToastOnError } from "../../utilities/displayToast";
+import useGetMembers from "../../hooks/useGetMembers";
+import { MdDescription, MdAssignment, MdLowPriority } from "react-icons/md";
 
 const DisplayTasks = () => {
   const today = useCurrentDate();
 
   const priorities = ["Low", "Moderate", "High"];
+
+  //fetching members data
+
+  const [members, loadingMembers] = useGetMembers();
 
   //setting the title
   const title = {
@@ -23,7 +28,7 @@ const DisplayTasks = () => {
     subTitle: "",
   };
 
-  //fetching tasks based survey data
+  //fetching tasks
   const {
     isLoading,
     data: tasks,
@@ -33,7 +38,7 @@ const DisplayTasks = () => {
     queryFn: getTaskData,
   });
 
-  // performing mutation for updating survey data
+  // performing mutation for updating task data
   const mutation1 = usePerformMutation(
     "updateTask",
     updateTaskData,
@@ -49,8 +54,9 @@ const DisplayTasks = () => {
     const defaultDeadline = form.hiddenDeadline.value || "Not Found";
     const title = form.title.value || "Not Found";
     const description = form.description.value || "Not Found";
-    const deadline = form.deadline.value || "Not Found";
     const priority = form.priority.value || "Not Found";
+    const assignTo = form.assignTo.value || "Not Found";
+    const deadline = form.deadline.value || "Not Found";
 
     const dateValidity = dateComparer(today, deadline);
 
@@ -60,8 +66,9 @@ const DisplayTasks = () => {
       const updatedTask = {
         title,
         description,
-        deadline,
         priority,
+        assignTo,
+        deadline,
       };
 
       mutation1.mutate({ _id, updatedTask });
@@ -83,7 +90,7 @@ const DisplayTasks = () => {
   //   refetch();
   // };
 
-  if (isLoading) {
+  if (isLoading || loadingMembers) {
     return <Loading />;
   }
 
@@ -91,7 +98,7 @@ const DisplayTasks = () => {
     return (
       <DashboardContainer>
         <Helmet>
-          <title>PanaPoll | Dashboard | Surveys</title>
+          <title>TaskOnTime | Dashboard | Tasks</title>
         </Helmet>
 
         <Title title={title}></Title>
@@ -103,7 +110,9 @@ const DisplayTasks = () => {
               <tr>
                 <th>Title</th>
                 <th>Details</th>
-                <th>Status</th>
+                <th>Priority</th>
+                <th>Assigned To</th>
+                <th>Deadline</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -140,7 +149,9 @@ const DisplayTasks = () => {
                       </div>
                     </dialog>
                   </td>
-                  <td>{task.status}</td>
+                  <td>{task.priority}</td>
+                  <td>{task.assignTo}</td>
+                  <td>{task.deadline}</td>
                   <td className="flex justify-center gap-3">
                     <button
                       className="btn hover:bg-emerald-500 group"
@@ -203,10 +214,10 @@ const DisplayTasks = () => {
 
                             <div className="relative">
                               <div className="h-20 w-[48px] flex justify-center items-center absolute top-0 left-0 bg-[#7DDDD9] rounded-lg">
-                                <i className="fa-solid fa-envelope text-xl text-white"></i>
+                                <MdDescription className="text-2xl text-white" />
                               </div>
                               <textarea
-                                type="email"
+                                type="text"
                                 name="description"
                                 placeholder="Description"
                                 required
@@ -217,10 +228,11 @@ const DisplayTasks = () => {
 
                             <div className="relative">
                               <div className="h-[48px] w-[48px] flex justify-center items-center absolute top-0 left-0 bg-[#7DDDD9] rounded-lg">
-                                <i className="fa-solid fa-envelope text-xl text-white"></i>
+                                <MdLowPriority className="text-2xl text-white" />
                               </div>
                               <select
                                 type="text"
+                                defaultValue={task.priority}
                                 name="priority"
                                 placeholder="Priority"
                                 required
@@ -228,6 +240,26 @@ const DisplayTasks = () => {
                               >
                                 {priorities.map((priority) => (
                                   <option key={priority}>{priority}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div className="relative">
+                              <div className="h-[48px] w-[48px] flex justify-center items-center absolute top-0 left-0 bg-[#95D0D4] rounded-lg">
+                                <MdAssignment className="text-2xl text-white" />
+                              </div>
+                              <select
+                                type="text"
+                                defaultValue={task.assignTo}
+                                name="assignTo"
+                                placeholder="Assign To"
+                                required
+                                className="input bg-[#a1dada41] w-full pl-16 rounded-lg border focus:border-[#7DDDD9] focus:outline-none"
+                              >
+                                {members.map((member) => (
+                                  <option key={member.name}>
+                                    {member.name}
+                                  </option>
                                 ))}
                               </select>
                             </div>
@@ -264,9 +296,9 @@ const DisplayTasks = () => {
                       <i className="fa-solid fa-trash group-hover:text-white "></i>
                     </button>
 
-                    <button className="btn hover:bg-[#FE7E51] group">
+                    {/* <button className="btn hover:bg-[#FE7E51] group">
                       <i className="fa-solid fa-comment group-hover:text-white"></i>
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))}

@@ -11,10 +11,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
 import { Helmet } from "react-helmet-async";
 import Loading from "../../components/shared/Loading";
-
-import { MdDescription } from "react-icons/md";
+import { MdDescription, MdAssignment, MdLowPriority } from "react-icons/md";
 import Title from "../../components/shared/Title/Title";
 import { saveTaskData } from "../../api/taskAPIs";
+import useGetMembers from "../../hooks/useGetMembers";
 
 const CreateTask = () => {
   const { user, loading } = useAuth();
@@ -26,6 +26,10 @@ const CreateTask = () => {
   const navigate = useNavigate();
 
   const priorities = ["Low", "Moderate", "High"];
+
+  //fetching members data
+
+  const [members, loadingMembers] = useGetMembers();
 
   //setting the title
   const title = {
@@ -42,7 +46,7 @@ const CreateTask = () => {
       showAlertOnSuccess("Inserted successfully!");
       reset();
       queryClient.invalidateQueries("createTasks");
-      navigate(location?.state ? location.state : "/dashboard");
+      navigate(location?.state ? location.state : "/dashboard/manage-tasks");
     },
     onError: (error) => {
       showAlertOnError(error);
@@ -61,6 +65,7 @@ const CreateTask = () => {
           description: data.description,
           deadline: data.deadline,
           priority: data.priority,
+          assignTo: data.assignTo,
           status: "initialized",
           email: user?.email,
         };
@@ -70,14 +75,18 @@ const CreateTask = () => {
     }
   };
 
-  if (mutation.isLoading || loading) {
+  if (mutation.isLoading || loading || loadingMembers) {
     return <Loading />;
   }
+
+  const filteredMembers = members.filter(
+    (member) => member.name !== user.displayName
+  );
 
   return (
     <DashboardContainer>
       <Helmet>
-        <title>PanaPoll | Dashboard | Create Survey</title>
+        <title>TaskOnTime | Dashboard | Create Survey</title>
       </Helmet>
 
       <Title title={title}></Title>
@@ -115,21 +124,7 @@ const CreateTask = () => {
 
           <div className="relative">
             <div className="h-[48px] w-[48px] flex justify-center items-center absolute top-0 left-0 bg-[#95D0D4] rounded-lg">
-              <i className="fa-regular fa-calendar-days text-xl text-white"></i>
-            </div>
-            <input
-              type="date"
-              id="in4"
-              {...register("deadline")}
-              placeholder="Deadline"
-              required
-              className="input bg-[#a1dada41] w-full pl-16 rounded-lg border focus:border-[#7DDDD9] focus:outline-none"
-            />
-          </div>
-
-          <div className="relative">
-            <div className="h-[48px] w-[48px] flex justify-center items-center absolute top-0 left-0 bg-[#95D0D4] rounded-lg">
-              <i className="fa-solid fa-d text-xl text-white"></i>
+              <MdLowPriority className="text-2xl text-white" />
             </div>
             <select
               type="text"
@@ -142,6 +137,37 @@ const CreateTask = () => {
                 <option key={priority}>{priority}</option>
               ))}
             </select>
+          </div>
+
+          <div className="relative">
+            <div className="h-[48px] w-[48px] flex justify-center items-center absolute top-0 left-0 bg-[#95D0D4] rounded-lg">
+              <MdAssignment className="text-2xl text-white" />
+            </div>
+            <select
+              type="text"
+              {...register("assignTo")}
+              placeholder="Assign To"
+              required
+              className="input bg-[#a1dada41] w-full pl-16 rounded-lg border focus:border-[#7DDDD9] focus:outline-none"
+            >
+              {filteredMembers.map((member) => (
+                <option key={member.name}>{member.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="relative">
+            <div className="h-[48px] w-[48px] flex justify-center items-center absolute top-0 left-0 bg-[#95D0D4] rounded-lg">
+              <i className="fa-regular fa-calendar-days text-xl text-white"></i>
+            </div>
+            <input
+              type="date"
+              id="in4"
+              {...register("deadline")}
+              placeholder="Deadline"
+              required
+              className="input bg-[#a1dada41] w-full pl-16 rounded-lg border focus:border-[#7DDDD9] focus:outline-none"
+            />
           </div>
 
           <input
